@@ -7,6 +7,7 @@ import com.neuedu.pojo.Shipping;
 import com.neuedu.pojo.UserInfo;
 import com.neuedu.service.IAddressSerive;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,8 +37,9 @@ public class AddressController {
      * 删除收货地址
      * */
 
-    @RequestMapping(value = "/del.do")
-    public ServerResponse del(HttpSession session, Integer shippingId){
+    @RequestMapping(value = "/del.do/shippingId/{shippingId}")
+    public ServerResponse del(HttpSession session,
+                              @PathVariable("shippingId") Integer shippingId){
         UserInfo userInfo =(UserInfo) session.getAttribute(Const.CURRENTUSER);
         if(userInfo==null)
         {
@@ -62,8 +64,9 @@ public class AddressController {
     /*
      * 选中查看具体地址
      * */
-    @RequestMapping(value = "/select.do")
-    public ServerResponse select(HttpSession session, Integer shippingId){
+    @RequestMapping(value = "/select.do/shippingId/{shippingId}")
+    public ServerResponse select(HttpSession session,
+                                 @PathVariable("shippingId") Integer shippingId){
         UserInfo userInfo =(UserInfo) session.getAttribute(Const.CURRENTUSER);
         if(userInfo==null)
         {

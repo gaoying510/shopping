@@ -9,6 +9,7 @@ import com.neuedu.common.ServerResponse;
 import com.neuedu.pojo.UserInfo;
 import com.neuedu.service.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,8 +28,9 @@ public class OrderController {
     /*
     * 创建订单
     * */
-    @RequestMapping(value = "/create.do")
-    public ServerResponse create(HttpSession session,Integer shippingId)
+    @RequestMapping(value = "/create.do/shippingId/{shippingId}")
+    public ServerResponse create(HttpSession session,
+                                 @PathVariable("shippingId") Integer shippingId)
     {
         UserInfo userInfo = (UserInfo)session.getAttribute(Const.CURRENTUSER);
         if(userInfo==null)
@@ -42,8 +44,9 @@ public class OrderController {
     /*
      * 取消订单
      * */
-    @RequestMapping(value = "/cancel.do")
-    public ServerResponse cancel(HttpSession session,long orderNo)
+    @RequestMapping(value = "/cancel.do/orderNo/{orderNo}")
+    public ServerResponse cancel(HttpSession session,
+                                 @PathVariable("orderNo") long orderNo)
     {
         UserInfo userInfo = (UserInfo)session.getAttribute(Const.CURRENTUSER);
         if(userInfo==null)
@@ -92,8 +95,9 @@ public class OrderController {
     /*
      * 订单详情
      * */
-    @RequestMapping(value = "/detail.do")
-    public ServerResponse detail(HttpSession session,Long orderNo)
+    @RequestMapping(value = "/detail.do/orderNo/{orderNo}")
+    public ServerResponse detail(HttpSession session,
+                                 @PathVariable("orderNo") Long orderNo)
     {
         UserInfo userInfo = (UserInfo)session.getAttribute(Const.CURRENTUSER);
         if(userInfo==null)
@@ -108,8 +112,9 @@ public class OrderController {
     /*
     * 支付接口
     * */
-    @RequestMapping(value = "/pay.do")
-    public ServerResponse pay(HttpSession session,Long orderNo,HttpServletRequest request){
+    @RequestMapping(value = "/pay.do/orderNo/{orderNo}")
+    public ServerResponse pay(HttpSession session,
+                              @PathVariable("orderNo") Long orderNo,HttpServletRequest request){
         UserInfo userInfo = (UserInfo)session.getAttribute(Const.CURRENTUSER);
         if(userInfo==null)
         {
@@ -160,8 +165,9 @@ public class OrderController {
     /*
     * 查询订单支付状态
     * */
-    @RequestMapping(value = "/query_order_pay_status.do")
-    public ServerResponse query_order_pay_status(HttpSession session,Long orderNo){
+    @RequestMapping(value = "/query_order_pay_status.do/orderNo/{orderNo}")
+    public ServerResponse query_order_pay_status(HttpSession session,
+                                                 @PathVariable("orderNo")Long orderNo){
         UserInfo userInfo = (UserInfo)session.getAttribute(Const.CURRENTUSER);
         if(userInfo==null)
         {

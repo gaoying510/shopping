@@ -58,4 +58,9 @@ public interface OrderMapper {
     * */
 
     List<Order> findOrderByUserid(Integer userId);
+    /*
+    * 按照创建时间查询订单
+    * */
+    List<Order> findOrderByCreateTime(@Param("orderStatus") Integer orderStatus,
+                                      @Param("time") String time);
 }

@@ -4,6 +4,7 @@ public class Const {
 
     public static final String CURRENTUSER="current_user";
     public static final String TRADE_SUCCESS="TRADE_SUCCESS";
+    public static final String AUTOLOGINTOKEN="aotoLoginToken";
 
     public enum ReponseCodeEnum{
 

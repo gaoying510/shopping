@@ -99,6 +99,18 @@ public class UserInfo {
      *
      * @mbggenerated
      */
+
+    private String token;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+
     public Integer getId() {
         return id;
     }
@@ -353,5 +365,23 @@ public class UserInfo {
      */
     public void setIp(String ip) {
         this.ip = ip == null ? null : ip.trim();
+    }
+
+    @Override
+    public String toString() {
+        return "UserInfo{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", question='" + question + '\'' +
+                ", answer='" + answer + '\'' +
+                ", role=" + role +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", ip='" + ip + '\'' +
+                ", token='" + token + '\'' +
+                '}';
     }
 }

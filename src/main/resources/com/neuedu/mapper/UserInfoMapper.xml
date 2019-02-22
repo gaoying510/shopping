@@ -137,5 +137,16 @@
    select count(1) from neuedu_user where username=#{username} and question=#{question} and answer=#{answer}
 
   </select>
+ <update id="updateTokenByUserId" parameterType="map">
+   update neuedu_user
+   set token#{token} where id=#{userId}
+ </update>
 
+  <select id="findUserInfoByToken" parameterType="string">
+ select id, username, password, email, phone, question, answer, role, create_time,
+    update_time, ip
+    from neuedu_user
+    where token=#{token}
+
+  </select>
 </mapper>

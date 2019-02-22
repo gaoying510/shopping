@@ -74,7 +74,7 @@ public class IOrderServiceIpml implements IOrderService{
     * 创建订单
     * */
     @Override
-    public ServerResponse create(Integer userId, Integer shippingId ) {
+    public ServerResponse create(Integer userId, Integer shippingId) {
        //参数非空校验
         if(shippingId==null)
         {
@@ -157,6 +157,32 @@ public class IOrderServiceIpml implements IOrderService{
             orderVO.setPaymentTypeDesc(paymetEnum.getDesc());
         }
        orderVO.setOrderNo(order.getOrderNo());
+        if (order.getCloseTime()==null){
+            orderVO.setCloseTime("null");
+        }else
+        {
+            orderVO.setCloseTime(DateUtils.dateToStr(order.getCloseTime()));
+        }
+        if (order.getEndTime()==null){
+            orderVO.setEndTime("null");
+        }else
+        {
+            orderVO.setEndTime(DateUtils.dateToStr(order.getEndTime()));
+        }
+        if (order.getPaymentTime()==null){
+            orderVO.setPaymentTime("null");
+        }else
+        {
+            orderVO.setPaymentTime(DateUtils.dateToStr(order.getPaymentTime()));
+        }
+        if (order.getSendTime()==null){
+            orderVO.setSendTime("null");
+        }
+        else
+        {
+            orderVO.setSendTime(DateUtils.dateToStr(order.getSendTime()));
+        }
+        orderVO.setCreateTime(DateUtils.dateToStr(order.getCreateTime()));
 
         return orderVO;
 
@@ -536,8 +562,40 @@ private Order createOrder(Integer userId,Integer shippingId,BigDecimal orderTota
         }
         return ServerResponse.createServerRespnseByError("false");
     }
+/*
+* 定时关闭订单
+* */
+    @Override
+    public void choseOrder(String time) {
+        //查询订单创建时间小于 时间未付款的订单
+        List<Order> orderList = orderMapper.findOrderByCreateTime(Const.OrderStatusEnum.ORDER_UP_PAY.getCode(), time);
+       //查询订单明细，跟新库存，改变状态
+        if(orderList!=null&&orderList.size()>0)
+        {
+            for (Order order:orderList) {
+                List<OrderItem> orderItemList = orderItemMapper.findOrderItemsByOrderno(order.getOrderNo());
+                if (orderItemList!=null&&orderItemList.size()>0)
+                {
+                    for (OrderItem orderItem:orderItemList) {
+                        Product product = productMapper.selectByPrimaryKey(orderItem.getProductId());
+                        if (product==null)
+                        {
+                            continue;
+                        }
+                        product.setStock(product.getStock()+orderItem.getQuantity());
+                        productMapper.updateByPrimaryKey(product);
+                    }
+                }
+                order.setStatus(Const.OrderStatusEnum.ORDER_CANCELED.getCode());
+                order.setCloseTime(new Date());
+                orderMapper.updateByPrimaryKey(order);
+            }
+        }
 
-    //////////////////////////////////////////////////////
+
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////
 private static Log log = LogFactory.getLog(Main.class);
 
     // 支付宝当面付2.0服务

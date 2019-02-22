@@ -47,5 +47,11 @@ public interface IOrderService {
     * 查询订单支付状态
     * */
     ServerResponse query_order_pay_status(Long orderNo);
+
+    /*
+    * 根据创建时间查询订单
+    * */
+
+    void choseOrder(String time);
 }
 

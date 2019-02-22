@@ -5,6 +5,7 @@ import com.neuedu.common.ResponseCode;
 import com.neuedu.common.ServerResponse;
 import com.neuedu.dao.UserInfoMapper;
 import com.neuedu.pojo.UserInfo;
+import com.neuedu.redis.RedisApi;
 import com.neuedu.service.IUserService;
 import com.neuedu.utils.MD5Utils;
 import com.neuedu.utils.TokenCache;
@@ -18,6 +19,8 @@ import java.util.UUID;
 public class IUserSerbiceImpl implements IUserService{
     @Autowired
     UserInfoMapper userInfoMapper;
+    @Autowired
+    RedisApi redisApi;
 
     @Override
     public ServerResponse longin(String username,String password) {
@@ -91,7 +94,7 @@ public class IUserSerbiceImpl implements IUserService{
      * */
     @Override
     public ServerResponse forget_get_question(String username) {
-        //参数非空校验
+        //参数非空校验forget_reset_password
      if(username==null||username.equals(""))
      {
          return  ServerResponse.createServerRespnseByError("用户名或密码不能为空");
@@ -141,7 +144,9 @@ public class IUserSerbiceImpl implements IUserService{
         String forgetToken = UUID.randomUUID().toString();
         //缓存
 
-        TokenCache.set(username,forgetToken);
+        //TokenCache.set(username,forgetToken);
+        redisApi.set(username,forgetToken);
+
 
         return ServerResponse.createServerRespnseBySucces(forgetToken);
     }
@@ -163,7 +168,8 @@ public class IUserSerbiceImpl implements IUserService{
         }
 
         //校验token
-        String s = TokenCache.get(username);
+        //String s = TokenCache.get(username);
+        String s = redisApi.get(username);
 
         if(s==null)
         {
@@ -286,6 +292,26 @@ public class IUserSerbiceImpl implements IUserService{
     public UserInfo findUserInfoByUserid(Integer userId) {
         return userInfoMapper.selectByPrimaryKey(userId);
 
+    }
+
+    @Override
+    public int updateTokenByUserId(Integer userId, String token) {
+
+
+        return userInfoMapper.updateTokenByUserId(userId,token);
+    }
+    /*
+     * 根据token查询用户信息
+     * */
+
+    @Override
+    public UserInfo findUserInfoByToken(String token) {
+        if (token==null&&token.equals(""))
+        {
+            return null;
+        }
+
+        return userInfoMapper.findUserInfoByToken(token);
     }
 
 
